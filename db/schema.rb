@@ -30,12 +30,12 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_04_234403) do
     t.datetime "end_date"
     t.string "guest_external_id"
     t.bigint "guest_id", null: false
-    t.jsonb "meta_data"
     t.integer "nights"
     t.integer "number_of_adults"
     t.integer "number_of_children"
     t.integer "number_of_infants"
     t.integer "payout_price_in_cents"
+    t.jsonb "raw_payload", default: {}
     t.integer "security_price_in_cents"
     t.datetime "start_date"
     t.integer "status", default: 0

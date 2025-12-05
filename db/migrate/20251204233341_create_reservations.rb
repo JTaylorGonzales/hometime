@@ -13,7 +13,7 @@ class CreateReservations < ActiveRecord::Migration[8.1]
       t.integer :security_price_in_cents
       t.integer :total_price_in_cents
       t.string :guest_external_id
-      t.jsonb :meta_data
+      t.jsonb :raw_payload, default: {}
 
       t.timestamps
     end
