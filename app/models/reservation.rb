@@ -1,5 +1,6 @@
 class Reservation < ApplicationRecord
-  enum status: [ :pending, :accepted ]
+  enum :status, [ :pending, :accepted ]
+  enum :currency, [ :USD, :EUR, :GBP, :CAD, :AUD, :PHP ]
 
   belongs_to :guest
 
@@ -8,6 +9,8 @@ class Reservation < ApplicationRecord
   :payout_price_in_cents, :security_price_in_cents, :total_price_in_cents, presence: true
 
   validates :nights, :number_of_adults,
-  :number_of_children, :number_of_infants, :payout_price_in_cents, :security_price_in_cents,
-  :total_price_in_cents, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
+  :number_of_children, :number_of_infants,  numericality: { only_integer: true, greater_than_or_equal_to: 0 }
+
+  validates :payout_price_in_cents, :security_price_in_cents,
+  :total_price_in_cents, numericality: { only_integer: true, greater_than: 0 }
 end
