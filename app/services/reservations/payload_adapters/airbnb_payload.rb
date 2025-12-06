@@ -1,6 +1,22 @@
 module Reservations
   module PayloadAdapters
     class AirbnbPayload < BaseAdapter
+      PAYLOAD_SCHEMA = {
+        start_date: String,
+        end_date: String,
+        nights: Integer,
+        guests: Integer,
+        adults: Integer,
+        children: Integer,
+        infants: Integer,
+        status: String,
+        guest: Hash,
+        currency: String,
+        payout_price: String,
+        security_price: String,
+        total_price: String
+      }.freeze
+
       private
       def normalize_payload
         {

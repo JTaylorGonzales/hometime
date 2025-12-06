@@ -21,8 +21,14 @@ module Reservations
         total_price_in_cents
       ].freeze
 
-      def initialize(params)
-        @params = params
+      def initialize(payload)
+        @params = payload
+      end
+
+      def matches_schema?
+        self.class::PAYLOAD_SCHEMA.all? do |key, klass|
+          params.key?(key) && params[key].is_a?(klass)
+        end
       end
 
       def normalize
@@ -34,7 +40,6 @@ module Reservations
 
       private
       attr_reader :params
-
 
       def normalize_payload
         raise NotImplementedError, "Subclasses must implement the normalize_payload method"

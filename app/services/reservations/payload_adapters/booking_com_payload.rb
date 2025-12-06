@@ -1,8 +1,26 @@
 module Reservations
   module PayloadAdapters
     class BookingComPayload < BaseAdapter
-      def initialize(params)
-        @params = params[:reservation]
+      PAYLOAD_SCHEMA = {
+        start_date: String,
+        end_date: String,
+        nights: Integer,
+        number_of_guests: Integer,
+        guest_details: Hash,
+        status_type: String,
+        guest_id: Integer,
+        guest_first_name: String,
+        guest_last_name: String,
+        guest_phone_numbers: Array,
+        guest_email: String,
+        host_currency: String,
+        expected_payout_amount: String,
+        listing_security_price_accurate: String,
+        total_paid_amount_accurate: String
+      }.freeze
+
+      def initialize(payload)
+        @params = payload[:reservation] || payload
       end
 
       private

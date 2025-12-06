@@ -1,17 +1,15 @@
 module Reservations
-  class UnknownPayloadError < StandardError; end
-
   class CreateReservationFromPayload
-    def self.call(payload)
-      new(payload).call
-    end
-
     def initialize(payload)
       @payload = payload.deep_symbolize_keys
     end
 
+    def self.call(payload)
+      new(payload).call
+    end
+
     def call
-      normalized_data = adapter.new(payload).normalize
+      normalized_data = AdapterResolver.resolve(payload).normalize
 
       result = create_reservation(normalized_data)
       if result.persisted?
@@ -19,29 +17,16 @@ module Reservations
       else
         ServiceResult.failure(result.errors.full_messages)
       end
+
+    rescue UnknownPayloadError => e
+      Rails.logger.warn("Unknown payload received: #{payload.inspect}")
+      ServiceResult.failure("Unknown Payload", :bad_request)
+    rescue AmbiguousPayloadError => e
+      Rails.logger.error("Ambiguous payload error: #{e.message}")
+      ServiceResult.failure("Internal Server error", :internal_server_error)
     end
 
     private
-
-    def adapter
-      case
-      when airbnb_payload?
-        PayloadAdapters::AirbnbPayload
-      when booking_com_payload?
-        PayloadAdapters::BookingComPayload
-      else
-        raise UnknownPayloadError, "Unknown payload structure"
-      end
-    end
-
-    def airbnb_payload?
-      payload.key?(:guest)
-    end
-
-    def booking_com_payload?
-      payload.key?(:reservation)
-    end
-
     def create_reservation(data)
       guest = Guest.find_or_initialize_by(email: data[:guest_email])
 
