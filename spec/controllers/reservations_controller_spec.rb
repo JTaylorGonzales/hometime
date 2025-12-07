@@ -17,7 +17,7 @@ RSpec.describe ReservationsController, type: :controller do
 
       post :create, params: invalid_airbnb_payload, as: :json
 
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
       expect(response.parsed_body["error"]).to include("First name can't be blank")
     end
   end
