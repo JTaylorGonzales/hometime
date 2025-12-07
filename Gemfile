@@ -55,4 +55,6 @@ group :development, :test do
   gem "pry-byebug"
 
   gem "rspec-rails", "~> 8.0.0"
+
+  gem "tty-prompt"
 end
