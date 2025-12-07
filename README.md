@@ -85,6 +85,9 @@
   - it will ask for the adapter name ex: AirbnbPayload
   - and also the path for the .json file for the payload itself
   - it will generate 2 files the Adapter and a spec for it
+  - you still need to update the Adapter file for the proper mapping of the values
+  - after that, you add it to the list of ADAPTERS in AdapterResolver
+  - lastly, update the `shared_examples.rb` for the new payload and update the generated spec if needed
 
-- important: make sure the file.json only contains the part of the payload where we will extract the data. 
+- `important`: make sure the file.json only contains the part of the payload where we will extract the data. 
   - for example, the `payload example 2` should only contains the hash inside the "reservations" key since it contains the main structure that we want to save
