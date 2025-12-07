@@ -13,5 +13,7 @@ RSpec.describe Guest, type: :model do
     it { should validate_presence_of(:first_name) }
     it { should validate_presence_of(:last_name) }
     it { should validate_presence_of(:phone_numbers) }
+    it { should allow_value("test@example.com").for(:email) }
+    it { should_not allow_value("invalid_email").for(:email) }
   end
 end
