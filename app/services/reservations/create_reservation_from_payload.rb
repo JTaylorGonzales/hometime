@@ -12,7 +12,7 @@ module Reservations
       normalized_data = AdapterResolver.resolve(payload).normalize
 
       result = create_reservation(normalized_data)
-      if result.persisted?
+      if result.valid? && result.persisted?
         ServiceResult.success(result)
       else
         ServiceResult.failure(result.errors.full_messages)
@@ -36,8 +36,9 @@ module Reservations
         phone_numbers: Array(data[:guest_phone])
       )
 
-      return guest unless guest.save
+      return guest unless guest.valid?
 
+      guest.save
       guest.reservations.create(
         start_date: data[:start_date],
         end_date: data[:end_date],
