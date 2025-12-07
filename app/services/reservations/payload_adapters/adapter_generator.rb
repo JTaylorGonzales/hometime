@@ -44,7 +44,7 @@ module Reservations
 
       def adapter_file_path
         snake_name = adapter_name.underscore
-        Rails.root.join("app/adapters/reservations/payload_adapters/#{snake_name}.rb")
+        Rails.root.join("app/services/reservations/payload_adapters/#{snake_name}.rb")
       end
 
       def spec_file_path
