@@ -7,7 +7,7 @@ RSpec.describe Reservations::PayloadAdapters::AirbnbPayload do
 
   subject(:adapter) { described_class.new(airbnb_payload.deep_symbolize_keys) }
 
- describe ".matches_schema?" do
+  describe ".matches_schema?" do
     it "matches the Airbnb schema" do
       expect(adapter.matches_schema?).to eq(true)
     end
