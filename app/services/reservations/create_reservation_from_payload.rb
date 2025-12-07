@@ -11,7 +11,7 @@ module Reservations
     def call
       normalized_data = AdapterResolver.resolve(payload).normalize
 
-      result = create_reservation(normalized_data)
+      result = create_reservation_with_guest(normalized_data)
       if result.valid? && result.persisted?
         ServiceResult.success(result)
       else
@@ -27,19 +27,28 @@ module Reservations
     end
 
     private
-    def create_reservation(data)
-      guest = Guest.find_or_initialize_by(email: data[:guest_email])
+    def create_reservation_with_guest(data)
+      ActiveRecord::Base.transaction do
+        guest = find_or_create_guest!(data)
+        create_reservation_for_guest(guest, data)
+      end
+    rescue ActiveRecord::RecordInvalid => e
+      e.record
+    end
 
+    def find_or_create_guest!(data)
+      guest = Guest.find_or_initialize_by(email: data[:guest_email])
       guest.assign_attributes(
         first_name: data[:guest_first_name],
         last_name: data[:guest_last_name],
         phone_numbers: Array(data[:guest_phone])
       )
+      guest.save!
+      guest
+    end
 
-      return guest unless guest.valid?
-
-      guest.save
-      guest.reservations.create(
+    def create_reservation_for_guest(guest, data)
+      guest.reservations.create!(  # Use create! to raise on validation failure
         start_date: data[:start_date],
         end_date: data[:end_date],
         nights: data[:nights],
